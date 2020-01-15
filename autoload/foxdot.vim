@@ -38,42 +38,54 @@ endfunction
 function! s:startFoxDot()
   echon "Starting FoxDot..."
   let l:opts = {}
+  let l:opts.pty = 1
+  let l:opts.out_io = 'buffer'
+  let l:opts.out_name = 'FoxDotLog'
   let l:opts.out_cb = "foxdot#outHandler"
   let l:opts.err_cb = "foxdot#errHandler"
   let s:foxdot_job = job_start('"'.g:python_executable_path.'" "'.s:foxdot_cli_path.'"', l:opts)
+  set autoread
+  set splitbelow
+  split | buffer FoxDotLog
+  " set nomodifiable
+
   let s:foxdot = job_getchannel(s:foxdot_job)
   echon "done!\n"
 endfunction
 
 function! s:setupCommands()
   command! FoxDotReboot call foxdot#reboot()
-  command! -range FoxDotEval call foxdot#run(<line1>, <line2>)
-  vnoremap cp :FoxDotEval<CR>
-  nmap <C-CR> vipcp
+  " command! -range FoxDotEval call foxdot#run(<line1>, <line2>)
+  command! -range FoxDotEval <line1>,<line2>call foxdot#run()
+  "vnoremap cp :FoxDotEval<CR>
+  "nmap <C-CR> vipcp
+  nmap <C-CR> vip:FoxDotEval<CR>
 endfunction
 
-function! foxdot#run(line1, line2)
+function! foxdot#run()
   let l:str = ''
-  for l:lnum in range(a:line1, a:line2)
+  " for l:lnum in range(a:line1, a:line2)
+  for l:lnum in range(a:firstline, a:lastline)
     let l:line = substitute(getline(l:lnum), '^[[:space:]]*', '', '')
-    if match(l:line, '^\.') != -1
-      let l:str = l:str . l:line
-    else
-      let l:str = l:str . " " . l:line
-    endif
+    call ch_sendraw(s:foxdot, l:line . "\n")
+    "if match(l:line, '^\.') != -1
+    "  let l:str = l:str . l:line
+    "else
+    "  let l:str = l:str . " " . l:line
+    "endif
   endfor
-  call ch_sendraw(s:foxdot, l:str . "\n")
+  "call ch_sendraw(s:foxdot, l:str . "\n")
 endfunction
 
 function! foxdot#start()
-  call s:startSuperCollider()
+  " call s:startSuperCollider()
   call s:startFoxDot()
   call s:setupCommands()
 endfunction
 
 function! foxdot#stop()
   call job_stop(s:foxdot_job)
-  call job_stop(s:sclang_job)
+  " call job_stop(s:sclang_job)
 endfunction
 
 function! foxdot#reboot()
