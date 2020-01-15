@@ -28,7 +28,7 @@ function! s:startSuperCollider()
 endfunction
 
 function! foxdot#outHandler(ch, msg)
-  echo a:msg
+  " echo a:msg
 endfunction
 
 function! foxdot#errHandler(ch, msg)
@@ -55,26 +55,30 @@ endfunction
 
 function! s:setupCommands()
   command! FoxDotReboot call foxdot#reboot()
-  " command! -range FoxDotEval call foxdot#run(<line1>, <line2>)
-  command! -range FoxDotEval <line1>,<line2>call foxdot#run()
+  command! -range FoxDotEval call foxdot#run(<line1>, <line2>)
+  "command! -range FoxDotEval <line1>,<line2>call foxdot#run()
   "vnoremap cp :FoxDotEval<CR>
   "nmap <C-CR> vipcp
   nmap <C-CR> vip:FoxDotEval<CR>
 endfunction
 
-function! foxdot#run()
+function! foxdot#run(firstline1, lastline1)
   let l:str = ''
   " for l:lnum in range(a:line1, a:line2)
-  for l:lnum in range(a:firstline, a:lastline)
-    let l:line = substitute(getline(l:lnum), '^[[:space:]]*', '', '')
-    call ch_sendraw(s:foxdot, l:line . "\n")
+  for l:lnum in range(a:firstline1, a:lastline1)
+    " let l:line = substitute(getline(l:lnum), '^[[:space:]]*', '', '')
+    let l:line = getline(l:lnum)
+    ""let l:str = l:str . l:line . "\n"
+    call ch_sendraw(s:foxdot, '.'. l:line . "\n")
     "if match(l:line, '^\.') != -1
     "  let l:str = l:str . l:line
     "else
     "  let l:str = l:str . " " . l:line
     "endif
   endfor
-  "call ch_sendraw(s:foxdot, l:str . "\n")
+  " call ch_evalraw(s:foxdot, l:str . "\n")
+  echo l:str
+  call ch_sendraw(s:foxdot, '[STACK-SEND]' . "\n")
 endfunction
 
 function! foxdot#start()
