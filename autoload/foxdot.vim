@@ -28,6 +28,9 @@ function! s:startSuperCollider()
 endfunction
 
 function! foxdot#outHandler(ch, msg)
+  exe bufwinnr("FoxDotLog") . "wincmd w"
+  exe "norm G"
+  exe winnr("#"). "wincmd w"
   " echo a:msg
 endfunction
 
@@ -60,6 +63,7 @@ function! s:setupCommands()
   "vnoremap cp :FoxDotEval<CR>
   "nmap <C-CR> vipcp
   nmap <C-CR> vip:FoxDotEval<CR>
+  imap <C-CR> <Esc><C-CR>i
 endfunction
 
 function! foxdot#run(firstline1, lastline1)

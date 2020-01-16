@@ -17,7 +17,7 @@ class FoxDotConsole(cmd.Cmd):
             self.stack = ''
         else:
             self.stack += line + "\n"
-            print self.stack
+            # print self.stack
 
 if __name__ == "__main__":
     FoxDotConsole().cmdloop()
