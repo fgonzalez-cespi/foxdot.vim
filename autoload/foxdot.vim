@@ -49,7 +49,7 @@ function! s:startFoxDot()
   let s:foxdot_job = jobstart('"'.g:python_executable_path.'" "'.s:foxdot_cli_path.'"', l:opts)
   set autoread
   set splitbelow
-  split | buffer FoxDotLog
+  split | buffer 'FoxDotLog'
   " set nomodifiable
 
   let s:foxdot = job_getchannel(s:foxdot_job)
