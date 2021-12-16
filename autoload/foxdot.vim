@@ -21,7 +21,7 @@ function! s:startSuperCollider()
   let l:cwd = getcwd()
   silent execute 'lcd '.l:sclang_dir
   let l:opts = {'err_cb': "foxdot#errHandler"}
-  let s:sclang_job = job_start('"'.l:exe.'" -D "'.s:foxdot_server_path.'"', l:opts)
+  let s:sclang_job = jobstart('"'.l:exe.'" -D "'.s:foxdot_server_path.'"', l:opts)
   silent execute 'lcd '.l:cwd
   sleep 3
   echon "done!\n"
@@ -46,7 +46,7 @@ function! s:startFoxDot()
   let l:opts.out_name = 'FoxDotLog'
   let l:opts.out_cb = "foxdot#outHandler"
   let l:opts.err_cb = "foxdot#errHandler"
-  let s:foxdot_job = job_start('"'.g:python_executable_path.'" "'.s:foxdot_cli_path.'"', l:opts)
+  let s:foxdot_job = jobstart('"'.g:python_executable_path.'" "'.s:foxdot_cli_path.'"', l:opts)
   set autoread
   set splitbelow
   split | buffer FoxDotLog
@@ -92,8 +92,8 @@ function! foxdot#start()
 endfunction
 
 function! foxdot#stop()
-  call job_stop(s:foxdot_job)
-  " call job_stop(s:sclang_job)
+  call jobstop(s:foxdot_job)
+  " call jobstop(s:sclang_job)
 endfunction
 
 function! foxdot#reboot()
