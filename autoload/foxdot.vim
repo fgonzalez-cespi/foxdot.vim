@@ -52,7 +52,6 @@ function! s:startFoxDot()
   split | buffer 'FoxDotLog'
   " set nomodifiable
 
-  let s:foxdot = job_getchannel(s:foxdot_job)
   echon "done!\n"
 endfunction
 
@@ -73,7 +72,7 @@ function! foxdot#run(firstline1, lastline1)
     " let l:line = substitute(getline(l:lnum), '^[[:space:]]*', '', '')
     let l:line = getline(l:lnum)
     ""let l:str = l:str . l:line . "\n"
-    call ch_sendraw(s:foxdot, '.'. l:line . "\n")
+    call ch_sendraw(s:foxdot_job, '.'. l:line . "\n")
     "if match(l:line, '^\.') != -1
     "  let l:str = l:str . l:line
     "else
@@ -82,7 +81,7 @@ function! foxdot#run(firstline1, lastline1)
   endfor
   " call ch_evalraw(s:foxdot, l:str . "\n")
   echo l:str
-  call ch_sendraw(s:foxdot, '[STACK-SEND]' . "\n")
+  call ch_sendraw(s:foxdot_job, '[STACK-SEND]' . "\n")
 endfunction
 
 function! foxdot#start()
